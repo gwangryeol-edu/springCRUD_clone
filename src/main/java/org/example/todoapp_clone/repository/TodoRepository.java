@@ -2,6 +2,8 @@ package org.example.todoapp_clone.repository;
 
 import org.example.todoapp_clone.dto.TodoDto;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -14,5 +16,9 @@ public class TodoRepository {
         storage.put(todo.getId(), todo);
 
         return todo;
+    }
+
+    public List<TodoDto> findAll() {
+        return new ArrayList<>(storage.values());
     }
 }
