@@ -12,7 +12,7 @@
 <!--    <h3 th:each="todo : ${todos}" th:text="${todo.getTitle()}"></h3>-->
 <div th:each="todo : ${todos}">
     <h3 th:text="${todo.getTitle()}"></h3>
-    <a href="@{/todos/{id}(id=${todo.getId()})}">DETAIL</a>
+    <a th:href="@{/todos/{id}(id=${todo.getId()})}">DETAIL</a>
 
 </div>
 </body>

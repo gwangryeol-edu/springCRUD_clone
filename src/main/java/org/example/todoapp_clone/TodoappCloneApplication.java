@@ -17,11 +17,11 @@ public class TodoappCloneApplication {
     }
 
     @Bean
-    public CommandLineRunner init(ApplicationArguments args){
+    public CommandLineRunner init(ApplicationArguments args, TodoRepository todoRepository){
         return args1 -> {
-            TodoRepository.save(new TodoDto(null, "study", "JAVA", false));
-            TodoRepository.save(new TodoDto(null, "cook", "kimbob", false));
-            TodoRepository.save(new TodoDto(null, "workout", "run", false));
+            todoRepository.save(new TodoDto(null, "study", "JAVA", false));
+            todoRepository.save(new TodoDto(null, "cook", "kimbob", false));
+            todoRepository.save(new TodoDto(null, "workout", "run", false));
         };
     }
 }

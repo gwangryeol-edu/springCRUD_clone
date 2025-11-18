@@ -31,7 +31,7 @@ public class TodoController {
         return "new";
     }
 
-    @GetMapping("todos/create")
+    @GetMapping("/todos/create")
     public String create(
             @RequestParam String title,
             @RequestParam String content,
@@ -56,7 +56,7 @@ public class TodoController {
 
     @GetMapping("/todos/{id}/delete")
     public String delete(@PathVariable Long id, Model model) {
-        //삭제로직
+        // 삭제로직
         todoRepository.deleteById(id);
         return "redirect:/todos";
     }
@@ -73,16 +73,18 @@ public class TodoController {
             @PathVariable Long id,
             @RequestParam String title,
             @RequestParam String content,
-            @RequestParam(defaultValue = "false") Boolean complete,
-            Model model){
+            @RequestParam(defaultValue = "false") Boolean completed,
+            Model model) {
         TodoDto todo = todoRepository.findById(id);
 
         todo.setTitle(title);
         todo.setContent(content);
-        todo.setCompleted(complete);
+        todo.setCompleted(completed);
 
         todoRepository.save(todo);
 
         return "redirect:/todos/" + id;
+
     }
+
 }

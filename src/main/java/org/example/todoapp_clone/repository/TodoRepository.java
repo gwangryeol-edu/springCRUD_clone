@@ -13,8 +13,7 @@ public class TodoRepository {
     private final Map<Long, TodoDto> storage = new ConcurrentHashMap<>();
     private Long nextId = 1L;
 
-    public TodoDto save(TodoDto todo)
-    {
+    public TodoDto save(TodoDto todo) {
         if (todo.getId() == null) {
             todo.setId(nextId++);
         }
@@ -31,7 +30,7 @@ public class TodoRepository {
         return storage.get(id);
     }
 
-    public void delete(Long id) {
+    public void deleteById(Long id) {
         storage.remove(id);
     }
 }

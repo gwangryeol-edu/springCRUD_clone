@@ -13,7 +13,7 @@
     <p th:text="${todo.completed ? 'completed' : 'not yet'}"></p>
 
     <hr>
-    <a href="@{/todos/{id}/edit(id=${todo.id}))">EDIT</a>
-    <a href="@{/todos/{id}/delete(id=${todo.id}))">DELETE</a>
+    <a th:href="@{/todos/{id}/edit(id=${todo.id})}">EDIT</a>
+    <a th:href="@{/todos/{id}/delete(id=${todo.id})}">DELETE</a>
 </body>
 </html>
