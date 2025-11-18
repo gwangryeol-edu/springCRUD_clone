@@ -8,6 +8,6 @@ public class TodoappCloneApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(TodoappCloneApplication.class, args);
-    }
 
+    }
 }
