@@ -1,6 +1,9 @@
 package org.example.todoapp_clone.dto;
 
 // Dto(Data Transfer Object): 계층 간 데이터 전달을 위해서 사용하는 데이터 묶음
+
+// 필요한 변수 설정
+// 생성자, getter, setter
 public class TodoDto {
     private Long id;
     private String title;
