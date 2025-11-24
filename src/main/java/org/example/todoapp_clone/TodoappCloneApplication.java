@@ -20,7 +20,7 @@ public class TodoappCloneApplication {
     public CommandLineRunner init(ApplicationArguments args, TodoRepository todoRepository){
         return args1 -> {
             todoRepository.save(new TodoDto(null, "study", "JAVA", false));
-            todoRepository.save(new TodoDto(null, "cook", "kimbob", false));
+            todoRepository.save(new TodoDto(null, "cook", "kimbob", true));
             todoRepository.save(new TodoDto(null, "workout", "run", false));
         };
     }

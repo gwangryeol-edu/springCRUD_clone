@@ -46,6 +46,14 @@ public class TodoRepository {
             .filter((todo)->todo.getTitle().contains(keyword))
             .toList();
     }
+
+    // storage에 저장된 모든 Todo 중에서,
+    // completed 값(예: true 또는 false)과 일치하는 Todo만 골라서 리스트로 반환
+    public List<TodoDto> findCompleted(boolean completed) {
+        return storage.values().stream()    // values() 하면 [Todo1, Todo2, Todo3]
+            .filter(todo->todo.isCompleted()==completed)
+            .toList();  //필터링된 결과들을 다시 List 형태로 모아서 반환
+    }
 }
 
 //  원시 null 체크

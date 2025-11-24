@@ -110,13 +110,29 @@ public class TodoController {
             return "redirect:/todos";
         }
     }
+
     @GetMapping("/todos/search")
-    public String search(@RequestParam String keyword, Model model){
+    public String search(@RequestParam String keyword, Model model) {
 
         List<TodoDto> todos = todoRepository.findByTitleContaining(keyword);
 
         model.addAttribute("todos", todos);
         return "todos";
     }
+
+    @GetMapping("/todos/active")
+    public String active(Model model) {
+        List<TodoDto> todos = todoRepository.findByCompleted(false);
+        model.addAttribute("todos", todos);
+        return "active";
+    }
+
+    @GetMapping("/todos/completed")
+    public String completed(Model model) {
+        List<TodoDto> todos = todoRepository.findByCompleted(true);
+        model.addAttribute("todos", todos);
+        return "todos";
+    }
+
 
 }
