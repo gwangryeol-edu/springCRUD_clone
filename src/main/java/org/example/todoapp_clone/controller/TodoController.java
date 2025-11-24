@@ -12,6 +12,7 @@ import java.util.List;
 
 @Controller
 public class TodoController {
+
     //private final TodoRepository todoRepository = new TodoRepository();
     private final TodoRepository todoRepository;
 
@@ -33,9 +34,9 @@ public class TodoController {
 
     @GetMapping("/todos/create")
     public String create(
-            @RequestParam String title,
-            @RequestParam String content,
-            Model model
+        @RequestParam String title,
+        @RequestParam String content,
+        Model model
     ) {
         TodoDto todoDto = new TodoDto(null, title, content, false);
         //TodoRepository todoRepository = new TodoRepository();
@@ -49,9 +50,19 @@ public class TodoController {
 
     @GetMapping("/todos/{id}")
     public String detail(@PathVariable Long id, Model model) {
-        TodoDto todo = todoRepository.findById(id);
-        model.addAttribute("todo", todo);
-        return "detail";
+//        TodoDto todo = todoRepository.findById(id);
+        try {
+            TodoDto todo = todoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+            // .orElseThrow()는 Optional 객체에서만 반환
+            // @TodoRepoitory에서 findById가 Optional을 반환하게 변환하여야
+
+            model.addAttribute("todo", todo);
+            return "detail";
+
+        } catch (IllegalArgumentException e) {
+            return "redirect:/todos";
+        }
     }
 
     @GetMapping("/todos/{id}/delete")
@@ -63,27 +74,41 @@ public class TodoController {
 
     @GetMapping("/todos/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
-        TodoDto todo = todoRepository.findById(id);
-        model.addAttribute("todo", todo);
-        return "edit";
+
+        try {
+            TodoDto todo = todoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+            model.addAttribute("todo", todo);
+            return "edit";
+        } catch (IllegalArgumentException e) {
+            return "redirect:/todos";
+        }
     }
 
     @GetMapping("/todos/{id}/update")
     public String update(
-            @PathVariable Long id,
-            @RequestParam String title,
-            @RequestParam String content,
-            @RequestParam(defaultValue = "false") Boolean completed,
-            Model model) {
-        TodoDto todo = todoRepository.findById(id);
+        @PathVariable Long id,
+        @RequestParam String title,
+        @RequestParam String content,
+        @RequestParam(defaultValue = "false") Boolean completed,
+        Model model) {
 
-        todo.setTitle(title);
-        todo.setContent(content);
-        todo.setCompleted(completed);
+        try {
+            TodoDto todo = todoRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+            todo.setTitle(title);
+            todo.setContent(content);
+            todo.setCompleted(completed);
 
-        todoRepository.save(todo);
+            todoRepository.save(todo);
 
-        return "redirect:/todos/" + id;
+            return "redirect:/todos/" + id;
+
+        } catch (IllegalArgumentException e) {
+            return "redirect:/todos";
+        }
+
+
 
     }
 

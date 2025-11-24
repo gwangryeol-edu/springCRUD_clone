@@ -1,5 +1,6 @@
 package org.example.todoapp_clone.repository;
 
+import java.util.Optional;
 import org.example.todoapp_clone.dto.TodoDto;
 import org.springframework.stereotype.Repository;
 
@@ -26,11 +27,25 @@ public class TodoRepository {
         return new ArrayList<>(storage.values());
     }
 
-    public TodoDto findById(Long id) {
-        return storage.get(id);
+    // Optional : 값이 있을수도 있고(null이 아닐수도) 없을 수도 있음(null 일수도
+    // null 때문에 생기는 오류를 줄이기 위해 만든 안전한 껍데기(wrapper)
+    //
+    public Optional findById(Long id) {
+//        return storage.get(id);
+        return Optional.ofNullable(storage.get(id));
     }
 
     public void deleteById(Long id) {
         storage.remove(id);
     }
 }
+
+//  원시 null 체크
+//TodoDto todo = storage.get(id);
+//if (todo == null) {
+//    throw new IllegalArgumentException("없음");
+//}
+//    return todo;
+
+//  optional null 체크
+//return Optional.ofNullable(storage.get(id));
