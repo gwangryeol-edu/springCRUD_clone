@@ -38,6 +38,14 @@ public class TodoRepository {
     public void deleteById(Long id) {
         storage.remove(id);
     }
+
+    public List<TodoDto> findByTitleContaining(String keyword) {
+        // .stream(): 데이터 흐름으로 표현, for문 대신 더 쉽게 데이터 처리하려고 쓰는 것!
+        return storage.values().stream()
+            // .contain: 문자열이나 리스트 안에 “특정 값이 들어있는지” 확인
+            .filter((todo)->todo.getTitle().contains(keyword))
+            .toList();
+    }
 }
 
 //  원시 null 체크
@@ -49,3 +57,4 @@ public class TodoRepository {
 
 //  optional null 체크
 //return Optional.ofNullable(storage.get(id));
+

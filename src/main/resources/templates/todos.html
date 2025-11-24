@@ -6,8 +6,14 @@
 </head>
 <body>
     <h1>TODO LIST</h1>
+    <a href="/todos">HOME</a>
     <a href="/todos/new">NEW</a>
 
+<!--    submit을 누르면 /todos/search?keyword=입력값 으로 이동-->
+    <form action="/todos/search">
+      <input type="text" name="keyword">
+      <input type="submit">
+    </form>
     <hr>
 <!--    <h3 th:each="todo : ${todos}" th:text="${todo.getTitle()}"></h3>-->
 <div th:each="todo : ${todos}">

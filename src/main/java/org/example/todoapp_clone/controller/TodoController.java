@@ -22,6 +22,8 @@ public class TodoController {
 
     @GetMapping("/todos")
     public String todos(Model model) {
+        // 제네릭(Generic) 문법, Java에서 List 같은 컬렉션이 어떤 타입의 데이터를 담는지 “명시”하는 문법.
+        // TodoDto만(O) -> 컴파일 단계에서부터 타입을 안전하게 강제
         List<TodoDto> todos = todoRepository.findAll();
         model.addAttribute("todos", todoRepository.findAll());
         return "todos";
@@ -107,9 +109,14 @@ public class TodoController {
         } catch (IllegalArgumentException e) {
             return "redirect:/todos";
         }
+    }
+    @GetMapping("/todos/search")
+    public String search(@RequestParam String keyword, Model model){
 
+        List<TodoDto> todos = todoRepository.findByTitleContaining(keyword);
 
-
+        model.addAttribute("todos", todos);
+        return "todos";
     }
 
 }
