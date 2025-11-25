@@ -6,11 +6,14 @@ import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
 @Controller
+// 이 컨트롤러 안에 있는 모든 메서드의 기본 URL 앞에 /todos가 자동으로 붙는다.
+@RequestMapping("/todos")
 public class TodoController {
 
     //private final TodoRepository todoRepository = new TodoRepository();
@@ -20,7 +23,7 @@ public class TodoController {
         this.todoRepository = todoRepository;
     }
 
-    @GetMapping("/todos")
+    @GetMapping
     public String todos(Model model) {
         // 제네릭(Generic) 문법, Java에서 List 같은 컬렉션이 어떤 타입의 데이터를 담는지 “명시”하는 문법.
         // TodoDto만(O) -> 컴파일 단계에서부터 타입을 안전하게 강제
@@ -29,12 +32,12 @@ public class TodoController {
         return "todos";
     }
 
-    @GetMapping("/todos/new")
+    @GetMapping("/new")
     public String newTodo() {
         return "new";
     }
 
-    @GetMapping("/todos/create")
+    @GetMapping("/create")
     public String create(
         @RequestParam String title,
         @RequestParam String content,
@@ -50,7 +53,7 @@ public class TodoController {
         return "redirect:/todos";
     }
 
-    @GetMapping("/todos/{id}")
+    @GetMapping("/{id}")
     public String detail(@PathVariable Long id, Model model) {
 //        TodoDto todo = todoRepository.findById(id);
         try {
@@ -67,14 +70,14 @@ public class TodoController {
         }
     }
 
-    @GetMapping("/todos/{id}/delete")
+    @GetMapping("/{id}/delete")
     public String delete(@PathVariable Long id, Model model) {
         // 삭제로직
         todoRepository.deleteById(id);
         return "redirect:/todos";
     }
 
-    @GetMapping("/todos/{id}/edit")
+    @GetMapping("/{id}/edit")
     public String edit(@PathVariable Long id, Model model) {
 
         try {
@@ -87,7 +90,7 @@ public class TodoController {
         }
     }
 
-    @GetMapping("/todos/{id}/update")
+    @GetMapping("/{id}/update")
     public String update(
         @PathVariable Long id,
         @RequestParam String title,
@@ -111,7 +114,7 @@ public class TodoController {
         }
     }
 
-    @GetMapping("/todos/search")
+    @GetMapping("/search")
     public String search(@RequestParam String keyword, Model model) {
 
         List<TodoDto> todos = todoRepository.findByTitleContaining(keyword);
@@ -120,21 +123,21 @@ public class TodoController {
         return "todos";
     }
 
-    @GetMapping("/todos/active")
+    @GetMapping("/active")
     public String active(Model model) {
         List<TodoDto> todos = todoRepository.findByCompleted(false);
         model.addAttribute("todos", todos);
         return "active";
     }
 
-    @GetMapping("/todos/completed")
+    @GetMapping("/completed")
     public String completed(Model model) {
         List<TodoDto> todos = todoRepository.findByCompleted(true);
         model.addAttribute("todos", todos);
         return "todos";
     }
 
-    @GetMapping("/todos/{id}/toggle")
+    @GetMapping("/{id}/toggle")
     public String toggle(@PathVariable Long id, Model model){
 
         try {
@@ -148,6 +151,4 @@ public class TodoController {
             return "redirect:/todos";
         }
     }
-
-
 }
