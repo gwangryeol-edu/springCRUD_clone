@@ -5,6 +5,7 @@ import org.example.todoapp_clone.repository.TodoRepository;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,25 +36,40 @@ public class TodoController {
     }
 
     @GetMapping("/new")
-    public String newTodo() {
-        return "new";
+    public String newTodo(Model model) {
+        model.addAttribute("todo", new TodoDto());
+        return "form";
     }
 
     // @GetMapping("/create")
     // Get-> 조회만 하는 요청, Post-> 데이터 생성/변경
     @PostMapping
     public String create(
-        @RequestParam String title,
-        @RequestParam String content,
-        RedirectAttributes redirectAttributes,
-        Model model
+//        @RequestParam String title,
+//        @RequestParam String content,
+        @ModelAttribute TodoDto todo,
+        RedirectAttributes redirectAttributes
+//        Model model
     ) {
-        TodoDto todoDto = new TodoDto(null, title, content, false);
+//        TodoDto todoDto = new TodoDto(null, title, content, false);
         //TodoRepository todoRepository = new TodoRepository();
 
-        TodoDto todo = todoRepository.save(todoDto);
-        model.addAttribute("todo", todo);
+//        TodoDto todo = todoRepository.save(todoDto);
+        todoRepository.save(todo);
+//        model.addAttribute("todo", todo);
+
+        // FlashAttribute가 하는 일: reduct 시 1번만 살아있는 데이터를 전달하는 방식
+        // session에 잠깐 저장 -> redirect 후 바로 삭제
         redirectAttributes.addFlashAttribute("message", "할 일이 생성되었습니다");
+        //redirect는 기본적으로 새로운 요청 새로고침이기 때문에
+        //Model에 넣은 값은 사라짐 -> Model로는 데이터를 전달할 수 없음
+
+        // Flash Attribute로 해결
+        //	1.	Redirect 직전, Flash 저장소(임시 세션)에 message 저장
+        //	2.	redirect:/todos 로 이동
+        //	3.	/todos 요청에서 Model에 자동 포함됨
+        //	4.	즉시 Flash 저장소에서 삭제됨 (1회성)
+        // => 화면 상단에 띄우는 일회성 알림 메시지에 알맞음
 
         //return "create";
         return "redirect:/todos";
@@ -84,8 +100,8 @@ public class TodoController {
         Model model) {
         // 삭제로직
         todoRepository.deleteById(id);
-        redirectAttributes.addFlashAttribute("message", "할일이 삭제되었습니다.")
-        redirectAttributes.addFlashAttribute("status", "delet")
+        redirectAttributes.addFlashAttribute("message", "할일이 삭제되었습니다.");
+        redirectAttributes.addFlashAttribute("status", "delete");
         return "redirect:/todos";
     }
 
@@ -96,7 +112,7 @@ public class TodoController {
             TodoDto todo = todoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
             model.addAttribute("todo", todo);
-            return "update";
+            return "form";
         } catch (IllegalArgumentException e) {
             return "redirect:/todos";
         }
@@ -105,19 +121,25 @@ public class TodoController {
     @PostMapping("/{id}/update")
     public String update(
         @PathVariable Long id,
-        @RequestParam String title,
-        @RequestParam String content,
-        @RequestParam(defaultValue = "false") Boolean completed,
+//        @RequestParam String title,
+//        @RequestParam String content,
+//        @RequestParam(defaultValue = "false") Boolean completed,
+
+
+
+//        HTML form → Java 객체(TodoDto) 로 자동 변환해주는 기능.
+        // @RequestParam 이런 걸 하나하나 적을 필요 없음
+        @ModelAttribute TodoDto todo,
         RedirectAttributes redirectAttributes,
         Model model) {
 
         try {
-            TodoDto todo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
-            todo.setTitle(title);
-            todo.setContent(content);
-            todo.setCompleted(completed);
-
+//            TodoDto todo = todoRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+//            todo.setTitle(title);
+//            todo.setContent(content);
+//            todo.setCompleted(completed);
+            todo.setId(id);
             todoRepository.save(todo);
             redirectAttributes.addFlashAttribute("message", "할 일이 수정되었습니다.");
 
