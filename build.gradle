@@ -24,6 +24,11 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+
+    // Thymeleaf Layout Dialect’ 라이브러리를 프로젝트에 추가한다는 뜻
+    // 타임리프 자체가 아니라 타임리프를 더 편하게 쓰기 위한 확장 기능
+    implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
 }
 
 tasks.named('test') {

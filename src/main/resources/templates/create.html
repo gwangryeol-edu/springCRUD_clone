@@ -1,14 +1,17 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>CREATE</title>
-</head>
-<body>
-    <h1>CREATE</h1>
+<!-- Thymeleaf Layout Dialect 네임스페이스 선언
+레이아웃 기능을 쓰기 위해 필요  -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<!--layout/default.html을 레이아웃으로 사용하겠다-->
 
-    <h4 th:text="${todo.getTitle()}"></h4>
-    <h4 th:text="${todo.getContent()}"></h4>
 
-</body>
-</html>
+<!--레이아웃의 “content” 영역에 채워질 내용-->
+<div layout:fragment="content">
+  <h1>CREATE</h1>
+
+<!--  모델(model)에 담긴 todo의 제목 출력-->
+  <h4 th:text="${todo.getTitle()}"></h4>
+  <h4 th:text="${todo.getContent()}"></h4>
+</div>

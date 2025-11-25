@@ -1,27 +1,30 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>TODO-LIST</title>
-</head>
-<body>
-    <h1>TODO LIST</h1>
-    <a href="/todos">HOME</a>
-    <a href="/todos/active">ACTIVE</a>
-    <a href="/todos/completed">COMPLETED</a>
-    <a href="/todos/new">NEW</a>
+<!-- Thymeleaf Layout Dialect 네임스페이스 선언
+레이아웃 기능을 쓰기 위해 필요  -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<!--layout/default.html을 레이아웃으로 사용하겠다-->
 
-<!--    submit을 누르면 /todos/search?keyword=입력값 으로 이동-->
-    <form action="/todos/search">
-      <input type="text" name="keyword">
-      <input type="submit">
-    </form>
-    <hr>
-<!--    <h3 th:each="todo : ${todos}" th:text="${todo.getTitle()}"></h3>-->
-<div th:each="todo : ${todos}">
+
+<!--레이아웃의 “content” 영역에 채워질 내용-->
+<div layout:fragment="content">
+  <h1>TODO LIST</h1>
+  <a href="/todos">HOME</a>
+  <a href="/todos/active">ACTIVE</a>
+  <a href="/todos/completed">COMPLETED</a>
+  <a href="/todos/new">NEW</a>
+
+  <!--    submit을 누르면 /todos/search?keyword=입력값 으로 이동-->
+  <form action="/todos/search">
+    <input type="text" name="keyword">
+    <input type="submit">
+  </form>
+  <hr>
+  <!--    <h3 th:each="todo : ${todos}" th:text="${todo.getTitle()}"></h3>-->
+  <div th:each="todo : ${todos}">
     <h3 th:text="${todo.getTitle()}"></h3>
     <a th:href="@{/todos/{id}(id=${todo.getId()})}">DETAIL</a>
 
+  </div>
 </div>
-</body>
-</html>

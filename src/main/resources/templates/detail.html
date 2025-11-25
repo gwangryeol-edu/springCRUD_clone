@@ -1,10 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>DETAIL</title>
-</head>
-<body>
+<!-- Thymeleaf Layout Dialect 네임스페이스 선언
+레이아웃 기능을 쓰기 위해 필요  -->
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout/default}">
+<!--layout/default.html을 레이아웃으로 사용하겠다-->
+
+
+<!--레이아웃의 “content” 영역에 채워질 내용-->
+<div layout:fragment="content">
     <h1>DETAIL</h1>
     <a href="/todos">HOME</a>
 
@@ -15,5 +19,4 @@
     <hr>
     <a th:href="@{/todos/{id}/edit(id=${todo.id})}">EDIT</a>
     <a th:href="@{/todos/{id}/delete(id=${todo.id})}">DELETE</a>
-</body>
-</html>
+</div>
