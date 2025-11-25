@@ -36,6 +36,8 @@ public class TodoService {
     public TodoDto updateTodoById(Long id, TodoDto newTodo) {
         TodoDto originTodo = getTodoById(id);
 
+        validateTitle(newTodo.getTitle());
+
         originTodo.setTitle(newTodo.getTitle());
         originTodo.setContent(newTodo.getContent());
         originTodo.setCompleted(newTodo.isCompleted());
@@ -44,6 +46,8 @@ public class TodoService {
     }
 
     public TodoDto createTodo(TodoDto todo) {
+        validateTitle(todo.getTitle());
+
         return todoRepository.save(todo);
     }
 
@@ -59,6 +63,15 @@ public class TodoService {
         TodoDto todo = getTodoById(id);
         todo.setCompleted(!todo.isCompleted());
         return todoRepository.save(todo);
+    }
+
+    private void validateTitle(String title) {
+        if (title == null || title.trim().isEmpty()) {
+            throw new IllegalArgumentException("title is empty");
+        }
+        if (title.length() > 50) {
+            throw new IllegalArgumentException("title is too long(MAX 50 byte)");
+        }
     }
 
 }

@@ -47,11 +47,19 @@ public class TodoController {
         @ModelAttribute TodoDto todo,
         RedirectAttributes redirectAttributes
     ) {
+
+        try {
         todoService.createTodo(todo);
+        redirectAttributes.addFlashAttribute("message", "할 일이 생성되었습니다");
+        return "redirect:/todos";
+
+        }catch (IllegalArgumentException e){
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/todos/new";
+        }
 
         // FlashAttribute가 하는 일: reduct 시 1번만 살아있는 데이터를 전달하는 방식
         // session에 잠깐 저장 -> redirect 후 바로 삭제
-        redirectAttributes.addFlashAttribute("message", "할 일이 생성되었습니다");
         //redirect는 기본적으로 새로운 요청 새로고침이기 때문에
         //Model에 넣은 값은 사라짐 -> Model로는 데이터를 전달할 수 없음
 
@@ -62,7 +70,6 @@ public class TodoController {
         //	4.	즉시 Flash 저장소에서 삭제됨 (1회성)
         // => 화면 상단에 띄우는 일회성 알림 메시지에 알맞음
 
-        return "redirect:/todos";
     }
 
     @GetMapping("/{id}")
