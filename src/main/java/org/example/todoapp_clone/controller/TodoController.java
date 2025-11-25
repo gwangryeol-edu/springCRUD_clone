@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 @Controller
 // 이 컨트롤러 안에 있는 모든 메서드의 기본 URL 앞에 /todos가 자동으로 붙는다.
@@ -44,6 +45,7 @@ public class TodoController {
     public String create(
         @RequestParam String title,
         @RequestParam String content,
+        RedirectAttributes redirectAttributes,
         Model model
     ) {
         TodoDto todoDto = new TodoDto(null, title, content, false);
@@ -51,13 +53,15 @@ public class TodoController {
 
         TodoDto todo = todoRepository.save(todoDto);
         model.addAttribute("todo", todo);
+        redirectAttributes.addFlashAttribute("message", "할 일이 생성되었습니다");
 
         //return "create";
         return "redirect:/todos";
     }
 
     @GetMapping("/{id}")
-    public String detail(@PathVariable Long id, Model model) {
+    public String detail(
+        @PathVariable Long id, Model model) {
 //        TodoDto todo = todoRepository.findById(id);
         try {
             TodoDto todo = todoRepository.findById(id)
@@ -74,9 +78,14 @@ public class TodoController {
     }
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id, Model model) {
+    public String delete(
+        @PathVariable Long id,
+        RedirectAttributes redirectAttributes,
+        Model model) {
         // 삭제로직
         todoRepository.deleteById(id);
+        redirectAttributes.addFlashAttribute("message", "할일이 삭제되었습니다.")
+        redirectAttributes.addFlashAttribute("status", "delet")
         return "redirect:/todos";
     }
 
@@ -99,6 +108,7 @@ public class TodoController {
         @RequestParam String title,
         @RequestParam String content,
         @RequestParam(defaultValue = "false") Boolean completed,
+        RedirectAttributes redirectAttributes,
         Model model) {
 
         try {
@@ -109,10 +119,12 @@ public class TodoController {
             todo.setCompleted(completed);
 
             todoRepository.save(todo);
+            redirectAttributes.addFlashAttribute("message", "할 일이 수정되었습니다.");
 
             return "redirect:/todos/" + id;
 
         } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("message", "없는 할 일입니다.");
             return "redirect:/todos";
         }
     }
