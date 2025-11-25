@@ -9,22 +9,42 @@
 
 <!--레이아웃의 “content” 영역에 채워질 내용-->
 <div layout:fragment="content">
-  <h1>TODO LIST</h1>
-  <a href="/todos">HOME</a>
-  <a href="/todos/active">ACTIVE</a>
-  <a href="/todos/completed">COMPLETED</a>
-  <a href="/todos/new">NEW</a>
+<!--  <h1>TODO LIST</h1>-->
+<!--  <a href="/todos">HOME</a>-->
+<!--  <a href="/todos/active">ACTIVE</a>-->
+<!--  <a href="/todos/completed">COMPLETED</a>-->
+<!--  <a href="/todos/new">NEW</a>-->
 
-  <!--    submit을 누르면 /todos/search?keyword=입력값 으로 이동-->
-  <form action="/todos/search">
-    <input type="text" name="keyword">
-    <input type="submit">
-  </form>
-  <hr>
-  <!--    <h3 th:each="todo : ${todos}" th:text="${todo.getTitle()}"></h3>-->
-  <div th:each="todo : ${todos}">
-    <h3 th:text="${todo.getTitle()}"></h3>
-    <a th:href="@{/todos/{id}(id=${todo.getId()})}">DETAIL</a>
+<!--  &lt;!&ndash;    submit을 누르면 /todos/search?keyword=입력값 으로 이동&ndash;&gt;-->
+<!--  <form action="/todos/search">-->
+<!--    <input type="text" name="keyword">-->
+<!--    <input type="submit">-->
+<!--  </form>-->
+<!--  <hr>-->
 
-  </div>
+  <table class="table table-striped">
+    <thead>
+    <th>ID</th>
+    <th>TITLE</th>
+    <th>COMPLETED</th>
+    <th>DETAIL</th>
+    </thead>
+
+    <tbody>
+    <tr th:each="todo : ${todos}">
+      <td th:text="${todo.id}"></td>
+      <td th:text="${todo.title}"></td>
+      <td>
+        <span th:if="${todo.completed}" class="badge bg-success">완료</span>
+        <span th:unless="${todo.completed}" class="badge bg-warning">진행중</span>
+      </td>
+      <td>
+        <a th:href="@{/todos/{id}(id=${todo.id})}" class="btn btn-sm btn-primary">detail</a>
+      </td>
+
+    </tr>
+    </tbody>
+  </table>
+
+
 </div>

@@ -30,7 +30,7 @@ public class TodoRepository {
     // Optional : 값이 있을수도 있고(null이 아닐수도) 없을 수도 있음(null 일수도
     // null 때문에 생기는 오류를 줄이기 위해 만든 안전한 껍데기(wrapper)
     //
-    public Optional findById(Long id) {
+    public Optional<TodoDto> findById(Long id) {
 //        return storage.get(id);
         return Optional.ofNullable(storage.get(id));
     }
@@ -49,7 +49,7 @@ public class TodoRepository {
 
     // storage에 저장된 모든 Todo 중에서,
     // completed 값(예: true 또는 false)과 일치하는 Todo만 골라서 리스트로 반환
-    public List<TodoDto> findCompleted(boolean completed) {
+    public List<TodoDto> findByCompleted(boolean completed) {
         return storage.values().stream()    // values() 하면 [Todo1, Todo2, Todo3]
             .filter(todo->todo.isCompleted()==completed)
             .toList();  //필터링된 결과들을 다시 List 형태로 모아서 반환

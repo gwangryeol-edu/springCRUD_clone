@@ -9,14 +9,22 @@
 
 <!--레이아웃의 “content” 영역에 채워질 내용-->
 <div layout:fragment="content">
-    <h1>DETAIL</h1>
-    <a href="/todos">HOME</a>
 
-    <h2 th:text="${todo.title}"></h2>
-    <h4 th:text="${todo.content}"></h4>
-    <p th:text="${todo.completed ? 'completed' : 'not yet'}"></p>
+  <div class="card">
+    <div class="card-body">
+      <h5 class="card-title" th:text="${todo.title}"></h5>
+      <p class="card-text" th:text="${todo.content}"></p>
+      <p>
+        완료 여부 :
+        <span th:if="${todo.completed}" class="badge bg-success">완료</span>
+        <span th:unless="${todo.completed}" class="badge bg-success">진행중</span>
+      </p>
 
-    <hr>
-    <a th:href="@{/todos/{id}/edit(id=${todo.id})}">EDIT</a>
-    <a th:href="@{/todos/{id}/delete(id=${todo.id})}">DELETE</a>
+    </div>
+  </div>
+
+    <a th:href="@{/todos/{id}/edit(id=${todo.id})}" class="btn btn-warning">edit</a>
+    <a th:href="@{/todos/{id}/delete(id=${todo.id})}" class="btn btn-danger">delete</a>
+
+
 </div>
