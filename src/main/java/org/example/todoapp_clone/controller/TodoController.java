@@ -1,7 +1,7 @@
 package org.example.todoapp_clone.controller;
 
 import org.example.todoapp_clone.dto.TodoDto;
-import org.example.todoapp_clone.repository.TodoRepository;
+import org.example.todoapp_clone.service.TodoService;
 import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,23 +20,29 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class TodoController {
 
     //private final TodoRepository todoRepository = new TodoRepository();
-    private final TodoRepository todoRepository;
+    //private final TodoRepository todoRepository;
 
-    public TodoController(TodoRepository todoRepository) {
-        this.todoRepository = todoRepository;
+//    public TodoController(TodoRepository todoRepository) {
+//        this.todoRepository = todoRepository;
+//    }
+    private final TodoService todoService;
+
+    public TodoController(TodoService todoService) {
+        this.todoService = todoService;
     }
 
     @GetMapping
     public String todos(Model model) {
         // 제네릭(Generic) 문법, Java에서 List 같은 컬렉션이 어떤 타입의 데이터를 담는지 “명시”하는 문법.
         // TodoDto만(O) -> 컴파일 단계에서부터 타입을 안전하게 강제
-        List<TodoDto> todos = todoRepository.findAll();
-        model.addAttribute("todos", todoRepository.findAll());
+        // List<TodoDto> todos = todoRepository.findAll();
+        List<TodoDto> todos = todoService.getAllTodos();
+        model.addAttribute("todos", todos);
         return "todos";
     }
 
     @GetMapping("/new")
-    public String newTodo(Model model) {
+    public String newTodo(Model model){
         model.addAttribute("todo", new TodoDto());
         return "form";
     }
@@ -55,8 +61,9 @@ public class TodoController {
         //TodoRepository todoRepository = new TodoRepository();
 
 //        TodoDto todo = todoRepository.save(todoDto);
-        todoRepository.save(todo);
+//        todoRepository.save(todo);
 //        model.addAttribute("todo", todo);
+        todoService.createTodo(todo);
 
         // FlashAttribute가 하는 일: reduct 시 1번만 살아있는 데이터를 전달하는 방식
         // session에 잠깐 저장 -> redirect 후 바로 삭제
@@ -80,10 +87,11 @@ public class TodoController {
         @PathVariable Long id, Model model) {
 //        TodoDto todo = todoRepository.findById(id);
         try {
-            TodoDto todo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+//            TodoDto todo = todoRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
             // .orElseThrow()는 Optional 객체에서만 반환
             // @TodoRepoitory에서 findById가 Optional을 반환하게 변환하여야
+            TodoDto todo = todoService.getTodoById(id);
 
             model.addAttribute("todo", todo);
             return "detail";
@@ -99,7 +107,8 @@ public class TodoController {
         RedirectAttributes redirectAttributes,
         Model model) {
         // 삭제로직
-        todoRepository.deleteById(id);
+//        todoRepository.deleteById(id);
+        todoService.deleteTodoById(id);
         redirectAttributes.addFlashAttribute("message", "할일이 삭제되었습니다.");
         redirectAttributes.addFlashAttribute("status", "delete");
         return "redirect:/todos";
@@ -109,8 +118,9 @@ public class TodoController {
     public String edit(@PathVariable Long id, Model model) {
 
         try {
-            TodoDto todo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+//            TodoDto todo = todoRepository.findById(id)
+//                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
+            TodoDto todo = todoService.getTodoById(id);
             model.addAttribute("todo", todo);
             return "form";
         } catch (IllegalArgumentException e) {
@@ -139,8 +149,11 @@ public class TodoController {
 //            todo.setTitle(title);
 //            todo.setContent(content);
 //            todo.setCompleted(completed);
-            todo.setId(id);
-            todoRepository.save(todo);
+//            todo.setId(id);
+//            todoRepository.save(todo);
+
+            todoService.updateTodoById(id, todo);
+
             redirectAttributes.addFlashAttribute("message", "할 일이 수정되었습니다.");
 
             return "redirect:/todos/" + id;
@@ -154,7 +167,8 @@ public class TodoController {
     @GetMapping("/search")
     public String search(@RequestParam String keyword, Model model) {
 
-        List<TodoDto> todos = todoRepository.findByTitleContaining(keyword);
+//        List<TodoDto> todos = todoRepository.findByTitleContaining(keyword);
+        List<TodoDto> todos = todoService.searchTodos(keyword);
 
         model.addAttribute("todos", todos);
         return "todos";
@@ -162,14 +176,16 @@ public class TodoController {
 
     @GetMapping("/active")
     public String active(Model model) {
-        List<TodoDto> todos = todoRepository.findByCompleted(false);
+//        List<TodoDto> todos = todoRepository.findByCompleted(false);
+        List<TodoDto> todos = todoService.getTodosByCompleted(false);
         model.addAttribute("todos", todos);
         return "active";
     }
 
     @GetMapping("/completed")
     public String completed(Model model) {
-        List<TodoDto> todos = todoRepository.findByCompleted(true);
+//        List<TodoDto> todos = todoRepository.findByCompleted(true);
+        List<TodoDto> todos = todoService.getTodosByCompleted(false);
         model.addAttribute("todos", todos);
         return "todos";
     }
@@ -178,10 +194,8 @@ public class TodoController {
     public String toggle(@PathVariable Long id, Model model){
 
         try {
-            TodoDto todo = todoRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("todo not found!!!!"));
-            todo.setCompleted(!todo.isCompleted());
-            todoRepository.save(todo);
+//
+            todoService.toggleCompleted(id);
             return "redirect:/todos/" + id;
 
         } catch (IllegalArgumentException e) {
