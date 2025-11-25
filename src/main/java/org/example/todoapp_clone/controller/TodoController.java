@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -37,7 +38,9 @@ public class TodoController {
         return "new";
     }
 
-    @GetMapping("/create")
+    // @GetMapping("/create")
+    // Get-> 조회만 하는 요청, Post-> 데이터 생성/변경
+    @PostMapping
     public String create(
         @RequestParam String title,
         @RequestParam String content,
@@ -77,20 +80,20 @@ public class TodoController {
         return "redirect:/todos";
     }
 
-    @GetMapping("/{id}/edit")
+    @GetMapping("/{id}/update")
     public String edit(@PathVariable Long id, Model model) {
 
         try {
             TodoDto todo = todoRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("todo not found!!!"));
             model.addAttribute("todo", todo);
-            return "edit";
+            return "update";
         } catch (IllegalArgumentException e) {
             return "redirect:/todos";
         }
     }
 
-    @GetMapping("/{id}/update")
+    @PostMapping("/{id}/update")
     public String update(
         @PathVariable Long id,
         @RequestParam String title,
