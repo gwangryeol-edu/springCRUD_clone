@@ -5,6 +5,11 @@ import org.example.todoapp_clone.dto.TodoDto;
 import org.example.todoapp_clone.repository.TodoRepository;
 import org.springframework.stereotype.Service;
 
+// controller에서 service를 분리한 이유
+// 핵심: Spring MVC 아키텍쳐의 핵심원리, Controller -> Service -> Repository
+// 1. controller는 웹 요청 처리만, service는 비즈니스 로직 담당
+// 2. 중복 로직을 service에서 재사용할 수 있음(getTOdoById는 여러 곳에서 사용됨)
+// 3. 테스트하기 훨씬 쉬워짐(순수 자바 코드로 테스트가능
 @Service
 public class TodoService {
 
